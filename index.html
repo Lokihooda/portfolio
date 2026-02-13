@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Portfolio - Creative Developer</title>
+    <title>Your Portfolio - 3D World</title>
     <style>
         * {
             margin: 0;
@@ -13,189 +13,298 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            overflow-x: hidden;
-            color: #333;
-            min-height: 100vh;
-        }
-
-        .container {
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
             overflow: hidden;
-            padding: 2rem;
+            background: #000;
         }
 
-        .hero {
-            text-align: center;
-            margin-bottom: 3rem;
-            animation: fadeInDown 1s ease-out;
+        #canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
         }
 
-        .hero h1 {
-            font-size: 3.5rem;
-            color: white;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+        #ui {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
             font-weight: bold;
+            color: white;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.7);
             letter-spacing: 3px;
-            margin-bottom: 1rem;
+            text-align: center;
+            pointer-events: none;
         }
 
-        .hero p {
-            font-size: 1.3rem;
-            color: rgba(255,255,255,0.95);
-            margin-bottom: 2rem;
+        .subtitle {
+            position: absolute;
+            top: calc(50% + 80px);
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            pointer-events: none;
         }
 
-        .links-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 1.5rem;
-            max-width: 900px;
-            padding: 2.5rem;
-            background: rgba(255,255,255,0.97);
-            border-radius: 25px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            animation: fadeInUp 1s ease-out 0.3s both;
+        .scroll-hint {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.7);
+            font-size: 1rem;
+            pointer-events: none;
+            animation: bounce 2s infinite;
         }
 
-        .link-item {
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        .portfolio-links {
+            position: fixed;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.8rem;
+            gap: 20px;
+            z-index: 20;
+            pointer-events: all;
+        }
+
+        .portfolio-link {
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.95);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
             text-decoration: none;
             color: #333;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            padding: 1.5rem 1rem;
-            border-radius: 18px;
-            cursor: pointer;
-            background: #f8f9fa;
+            display: inline-block;
         }
 
-        .link-item:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            transform: translateY(-8px) scale(1.05);
-            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
-        }
-
-        .icon {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            transition: transform 0.3s ease;
-        }
-
-        .link-item:hover .icon {
-            transform: scale(1.2);
-        }
-
-        .link-item span {
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-align: center;
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-            
-            .hero p {
-                font-size: 1rem;
-            }
-            
-            .links-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 0.8rem;
-                padding: 1.5rem;
-            }
-            
-            .link-item {
-                padding: 1rem 0.5rem;
-            }
-            
-            .icon {
-                width: 40px;
-                height: 40px;
-                font-size: 1.5rem;
-            }
-            
-            .link-item span {
-                font-size: 0.75rem;
-            }
+        .portfolio-link:hover {
+            background: rgba(255,255,255,1);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="hero">
-            <h1>YOUR NAME</h1>
-            <p>Project Coordinator & Creative Developer</p>
-        </div>
-
-        <div class="links-grid">
-            <a href="https://github.com/yourusername" target="_blank" class="link-item">
-                <div class="icon">🐙</div>
-                <span>GitHub</span>
-            </a>
-
-            <a href="https://twitter.com/yourusername" target="_blank" class="link-item">
-                <div class="icon">𝕏</div>
-                <span>Twitter</span>
-            </a>
-
-            <a href="https://linkedin.com/in/yourusername" target="_blank" class="link-item">
-                <div class="icon">💼</div>
-                <span>LinkedIn</span>
-            </a>
-
-            <a href="#cv" class="link-item">
-                <div class="icon">📄</div>
-                <span>CV</span>
-            </a>
-
-            <a href="https://github.com/yourusername/portfolio" target="_blank" class="link-item">
-                <div class="icon">💻</div>
-                <span>Source</span>
-            </a>
-
-            <a href="mailto:your.email@example.com" class="link-item">
-                <div class="icon">✉️</div>
-                <span>Contact</span>
-            </a>
-        </div>
+    <canvas id="canvas"></canvas>
+    <div id="ui">
+        <div class="title">YOUR NAME'S WORLD</div>
+        <div class="subtitle">Project Coordinator & Creative Developer</div>
+        <div class="scroll-hint">Scroll to move</div>
     </div>
+    <div class="portfolio-links">
+        <a href="https://github.com/yourusername" target="_blank" class="portfolio-link">GitHub</a>
+        <a href="https://twitter.com/yourusername" target="_blank" class="portfolio-link">Twitter</a>
+        <a href="https://linkedin.com/in/yourusername" target="_blank" class="portfolio-link">LinkedIn</a>
+        <a href="mailto:your.email@example.com" class="portfolio-link">Contact</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x87ceeb, 1);
+        renderer.shadowMap.enabled = true;
+
+        camera.position.set(0, 8, 15);
+        camera.lookAt(0, 0, 0);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(10, 20, 10);
+        directionalLight.castShadow = true;
+        directionalLight.shadow.mapSize.width = 2048;
+        directionalLight.shadow.mapSize.height = 2048;
+        scene.add(directionalLight);
+
+        // Ocean/Water
+        const waterGeometry = new THREE.PlaneGeometry(200, 200);
+        const waterMaterial = new THREE.MeshPhongMaterial({ color: 0x2a5998, shininess: 100 });
+        const water = new THREE.Mesh(waterGeometry, waterMaterial);
+        water.rotation.x = -Math.PI / 2;
+        water.receiveShadow = true;
+        scene.add(water);
+
+        // Add wave effect to water
+        const originalPositions = waterGeometry.attributes.position.array.slice();
+        let waveTime = 0;
+
+        // Sky gradient
+        const skyGeometry = new THREE.SphereGeometry(500, 32, 32);
+        const skyMaterial = new THREE.MeshBasicMaterial({
+            color: 0x87ceeb,
+            side: THREE.BackSide
+        });
+        const sky = new THREE.Mesh(skyGeometry, skyMaterial);
+        scene.add(sky);
+
+        // Create a simple house structure
+        // Foundation
+        const foundationGeometry = new THREE.BoxGeometry(8, 0.5, 8);
+        const foundationMaterial = new THREE.MeshPhongMaterial({ color: 0x8b7355 });
+        const foundation = new THREE.Mesh(foundationGeometry, foundationMaterial);
+        foundation.position.y = 0.25;
+        foundation.castShadow = true;
+        foundation.receiveShadow = true;
+        scene.add(foundation);
+
+        // Main house box
+        const houseGeometry = new THREE.BoxGeometry(6, 5, 6);
+        const houseMaterial = new THREE.MeshPhongMaterial({ color: 0xd4714a });
+        const house = new THREE.Mesh(houseGeometry, houseMaterial);
+        house.position.y = 3;
+        house.castShadow = true;
+        house.receiveShadow = true;
+        scene.add(house);
+
+        // Roof
+        const roofGeometry = new THREE.ConeGeometry(5, 3, 4);
+        const roofMaterial = new THREE.MeshPhongMaterial({ color: 0x8b4513 });
+        const roof = new THREE.Mesh(roofGeometry, roofMaterial);
+        roof.position.y = 7;
+        roof.rotation.y = Math.PI / 4;
+        roof.castShadow = true;
+        roof.receiveShadow = true;
+        scene.add(roof);
+
+        // Door
+        const doorGeometry = new THREE.BoxGeometry(1.5, 2.5, 0.2);
+        const doorMaterial = new THREE.MeshPhongMaterial({ color: 0x2d1b1b });
+        const door = new THREE.Mesh(doorGeometry, doorMaterial);
+        door.position.set(0, 1.5, 3.1);
+        door.castShadow = true;
+        door.receiveShadow = true;
+        scene.add(door);
+
+        // Window 1
+        const windowGeometry = new THREE.BoxGeometry(1, 1, 0.1);
+        const windowMaterial = new THREE.MeshPhongMaterial({ color: 0x87ceeb });
+        const window1 = new THREE.Mesh(windowGeometry, windowMaterial);
+        window1.position.set(-1.5, 3.5, 3.1);
+        window1.castShadow = true;
+        window1.receiveShadow = true;
+        scene.add(window1);
+
+        // Window 2
+        const window2 = new THREE.Mesh(windowGeometry, windowMaterial);
+        window2.position.set(1.5, 3.5, 3.1);
+        window2.castShadow = true;
+        window2.receiveShadow = true;
+        scene.add(window2);
+
+        // Tree
+        const trunkGeometry = new THREE.CylinderGeometry(0.5, 0.7, 4, 8);
+        const trunkMaterial = new THREE.MeshPhongMaterial({ color: 0x8b6f47 });
+        const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+        trunk.position.set(-5, 2, -3);
+        trunk.castShadow = true;
+        trunk.receiveShadow = true;
+        scene.add(trunk);
+
+        // Tree foliage
+        const foliageGeometry = new THREE.SphereGeometry(3, 8, 8);
+        const foliageMaterial = new THREE.MeshPhongMaterial({ color: 0x228b22 });
+        const foliage = new THREE.Mesh(foliageGeometry, foliageMaterial);
+        foliage.position.set(-5, 6, -3);
+        foliage.castShadow = true;
+        foliage.receiveShadow = true;
+        scene.add(foliage);
+
+        // Another tree
+        const trunk2 = trunk.clone();
+        trunk2.position.set(5, 2, -3);
+        scene.add(trunk2);
+
+        const foliage2 = foliage.clone();
+        foliage2.position.set(5, 6, -3);
+        scene.add(foliage2);
+
+        // Scroll handling
+        let scrollY = 0;
+        let targetCameraY = 8;
+        let targetCameraZ = 15;
+
+        window.addEventListener('wheel', (e) => {
+            scrollY += e.deltaY * 0.005;
+            targetCameraZ = Math.max(5, 15 - scrollY);
+            targetCameraY = Math.max(3, 8 - scrollY * 0.3);
+        });
+
+        // Touch/mobile support
+        let lastTouchY = 0;
+        window.addEventListener('touchstart', (e) => {
+            lastTouchY = e.touches[0].clientY;
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            const currentY = e.touches[0].clientY;
+            const diff = (lastTouchY - currentY) * 0.05;
+            scrollY += diff;
+            targetCameraZ = Math.max(5, 15 - scrollY);
+            targetCameraY = Math.max(3, 8 - scrollY * 0.3);
+            lastTouchY = currentY;
+        });
+
+        // Window resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Smooth camera movement
+            camera.position.y += (targetCameraY - camera.position.y) * 0.1;
+            camera.position.z += (targetCameraZ - camera.position.z) * 0.1;
+            camera.lookAt(0, 2, 0);
+
+            // Wave animation
+            waveTime += 0.01;
+            const positionAttribute = waterGeometry.getAttribute('position');
+            const positions = positionAttribute.array;
+
+            for (let i = 0; i < positions.length; i += 3) {
+                positions[i + 2] = originalPositions[i + 2] + Math.sin((originalPositions[i] + waveTime) * 0.01) * 0.3 * Math.cos((originalPositions[i + 1] + waveTime) * 0.01);
+            }
+            positionAttribute.needsUpdate = true;
+
+            // Rotate house slightly
+            house.rotation.y += 0.0002;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
 </body>
 </html>
