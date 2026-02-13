@@ -10,19 +10,16 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
             background: #000;
         }
-
-        #canvas {
+        canvas {
             display: block;
             width: 100vw;
             height: 100vh;
         }
-
         #ui {
             position: fixed;
             top: 0;
@@ -32,7 +29,6 @@
             pointer-events: none;
             z-index: 10;
         }
-
         .title {
             position: absolute;
             top: 50%;
@@ -44,9 +40,7 @@
             text-shadow: 0 4px 20px rgba(0,0,0,0.7);
             letter-spacing: 3px;
             text-align: center;
-            pointer-events: none;
         }
-
         .subtitle {
             position: absolute;
             top: calc(50% + 80px);
@@ -55,9 +49,7 @@
             font-size: 1.2rem;
             color: rgba(255,255,255,0.8);
             text-align: center;
-            pointer-events: none;
         }
-
         .scroll-hint {
             position: absolute;
             bottom: 40px;
@@ -65,15 +57,12 @@
             transform: translateX(-50%);
             color: rgba(255,255,255,0.7);
             font-size: 1rem;
-            pointer-events: none;
             animation: bounce 2s infinite;
         }
-
         @keyframes bounce {
             0%, 100% { transform: translateX(-50%) translateY(0); }
             50% { transform: translateX(-50%) translateY(-10px); }
         }
-
         .portfolio-links {
             position: fixed;
             bottom: 50px;
@@ -84,7 +73,6 @@
             z-index: 20;
             pointer-events: all;
         }
-
         .portfolio-link {
             padding: 12px 24px;
             background: rgba(255,255,255,0.95);
@@ -98,7 +86,6 @@
             color: #333;
             display: inline-block;
         }
-
         .portfolio-link:hover {
             background: rgba(255,255,255,1);
             transform: translateY(-3px);
@@ -120,191 +107,146 @@
         <a href="mailto:your.email@example.com" class="portfolio-link">Contact</a>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script async src="https://cdn.jsdelivr.net/npm/three@r128/build/three.min.js"></script>
     <script>
-        // Scene setup
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(0x87ceeb, 1);
-        renderer.shadowMap.enabled = true;
-
-        camera.position.set(0, 8, 15);
-        camera.lookAt(0, 0, 0);
-
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-        scene.add(ambientLight);
-
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        directionalLight.position.set(10, 20, 10);
-        directionalLight.castShadow = true;
-        directionalLight.shadow.mapSize.width = 2048;
-        directionalLight.shadow.mapSize.height = 2048;
-        scene.add(directionalLight);
-
-        // Ocean/Water
-        const waterGeometry = new THREE.PlaneGeometry(200, 200);
-        const waterMaterial = new THREE.MeshPhongMaterial({ color: 0x2a5998, shininess: 100 });
-        const water = new THREE.Mesh(waterGeometry, waterMaterial);
-        water.rotation.x = -Math.PI / 2;
-        water.receiveShadow = true;
-        scene.add(water);
-
-        // Add wave effect to water
-        const originalPositions = waterGeometry.attributes.position.array.slice();
-        let waveTime = 0;
-
-        // Sky gradient
-        const skyGeometry = new THREE.SphereGeometry(500, 32, 32);
-        const skyMaterial = new THREE.MeshBasicMaterial({
-            color: 0x87ceeb,
-            side: THREE.BackSide
-        });
-        const sky = new THREE.Mesh(skyGeometry, skyMaterial);
-        scene.add(sky);
-
-        // Create a simple house structure
-        // Foundation
-        const foundationGeometry = new THREE.BoxGeometry(8, 0.5, 8);
-        const foundationMaterial = new THREE.MeshPhongMaterial({ color: 0x8b7355 });
-        const foundation = new THREE.Mesh(foundationGeometry, foundationMaterial);
-        foundation.position.y = 0.25;
-        foundation.castShadow = true;
-        foundation.receiveShadow = true;
-        scene.add(foundation);
-
-        // Main house box
-        const houseGeometry = new THREE.BoxGeometry(6, 5, 6);
-        const houseMaterial = new THREE.MeshPhongMaterial({ color: 0xd4714a });
-        const house = new THREE.Mesh(houseGeometry, houseMaterial);
-        house.position.y = 3;
-        house.castShadow = true;
-        house.receiveShadow = true;
-        scene.add(house);
-
-        // Roof
-        const roofGeometry = new THREE.ConeGeometry(5, 3, 4);
-        const roofMaterial = new THREE.MeshPhongMaterial({ color: 0x8b4513 });
-        const roof = new THREE.Mesh(roofGeometry, roofMaterial);
-        roof.position.y = 7;
-        roof.rotation.y = Math.PI / 4;
-        roof.castShadow = true;
-        roof.receiveShadow = true;
-        scene.add(roof);
-
-        // Door
-        const doorGeometry = new THREE.BoxGeometry(1.5, 2.5, 0.2);
-        const doorMaterial = new THREE.MeshPhongMaterial({ color: 0x2d1b1b });
-        const door = new THREE.Mesh(doorGeometry, doorMaterial);
-        door.position.set(0, 1.5, 3.1);
-        door.castShadow = true;
-        door.receiveShadow = true;
-        scene.add(door);
-
-        // Window 1
-        const windowGeometry = new THREE.BoxGeometry(1, 1, 0.1);
-        const windowMaterial = new THREE.MeshPhongMaterial({ color: 0x87ceeb });
-        const window1 = new THREE.Mesh(windowGeometry, windowMaterial);
-        window1.position.set(-1.5, 3.5, 3.1);
-        window1.castShadow = true;
-        window1.receiveShadow = true;
-        scene.add(window1);
-
-        // Window 2
-        const window2 = new THREE.Mesh(windowGeometry, windowMaterial);
-        window2.position.set(1.5, 3.5, 3.1);
-        window2.castShadow = true;
-        window2.receiveShadow = true;
-        scene.add(window2);
-
-        // Tree
-        const trunkGeometry = new THREE.CylinderGeometry(0.5, 0.7, 4, 8);
-        const trunkMaterial = new THREE.MeshPhongMaterial({ color: 0x8b6f47 });
-        const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
-        trunk.position.set(-5, 2, -3);
-        trunk.castShadow = true;
-        trunk.receiveShadow = true;
-        scene.add(trunk);
-
-        // Tree foliage
-        const foliageGeometry = new THREE.SphereGeometry(3, 8, 8);
-        const foliageMaterial = new THREE.MeshPhongMaterial({ color: 0x228b22 });
-        const foliage = new THREE.Mesh(foliageGeometry, foliageMaterial);
-        foliage.position.set(-5, 6, -3);
-        foliage.castShadow = true;
-        foliage.receiveShadow = true;
-        scene.add(foliage);
-
-        // Another tree
-        const trunk2 = trunk.clone();
-        trunk2.position.set(5, 2, -3);
-        scene.add(trunk2);
-
-        const foliage2 = foliage.clone();
-        foliage2.position.set(5, 6, -3);
-        scene.add(foliage2);
-
-        // Scroll handling
-        let scrollY = 0;
-        let targetCameraY = 8;
-        let targetCameraZ = 15;
-
-        window.addEventListener('wheel', (e) => {
-            scrollY += e.deltaY * 0.005;
-            targetCameraZ = Math.max(5, 15 - scrollY);
-            targetCameraY = Math.max(3, 8 - scrollY * 0.3);
-        });
-
-        // Touch/mobile support
-        let lastTouchY = 0;
-        window.addEventListener('touchstart', (e) => {
-            lastTouchY = e.touches[0].clientY;
-        });
-
-        window.addEventListener('touchmove', (e) => {
-            const currentY = e.touches[0].clientY;
-            const diff = (lastTouchY - currentY) * 0.05;
-            scrollY += diff;
-            targetCameraZ = Math.max(5, 15 - scrollY);
-            targetCameraY = Math.max(3, 8 - scrollY * 0.3);
-            lastTouchY = currentY;
-        });
-
-        // Window resize handler
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        // Animation loop
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // Smooth camera movement
-            camera.position.y += (targetCameraY - camera.position.y) * 0.1;
-            camera.position.z += (targetCameraZ - camera.position.z) * 0.1;
-            camera.lookAt(0, 2, 0);
-
-            // Wave animation
-            waveTime += 0.01;
-            const positionAttribute = waterGeometry.getAttribute('position');
-            const positions = positionAttribute.array;
-
-            for (let i = 0; i < positions.length; i += 3) {
-                positions[i + 2] = originalPositions[i + 2] + Math.sin((originalPositions[i] + waveTime) * 0.01) * 0.3 * Math.cos((originalPositions[i + 1] + waveTime) * 0.01);
+        let scene, camera, renderer, house;
+        
+        function init() {
+            // Check if THREE is loaded
+            if (typeof THREE === 'undefined') {
+                setTimeout(init, 100);
+                return;
             }
-            positionAttribute.needsUpdate = true;
 
-            // Rotate house slightly
-            house.rotation.y += 0.0002;
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x87ceeb);
+            renderer.shadowMap.enabled = true;
 
-            renderer.render(scene, camera);
+            camera.position.set(0, 8, 15);
+            camera.lookAt(0, 0, 0);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(10, 20, 10);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+
+            // Water
+            const waterGeometry = new THREE.PlaneGeometry(200, 200);
+            const waterMaterial = new THREE.MeshPhongMaterial({ color: 0x2a5998 });
+            const water = new THREE.Mesh(waterGeometry, waterMaterial);
+            water.rotation.x = -Math.PI / 2;
+            scene.add(water);
+
+            // Sky
+            const skyGeometry = new THREE.SphereGeometry(500, 32, 32);
+            const skyMaterial = new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide });
+            const sky = new THREE.Mesh(skyGeometry, skyMaterial);
+            scene.add(sky);
+
+            // House foundation
+            const foundationGeometry = new THREE.BoxGeometry(8, 0.5, 8);
+            const foundationMaterial = new THREE.MeshPhongMaterial({ color: 0x8b7355 });
+            const foundation = new THREE.Mesh(foundationGeometry, foundationMaterial);
+            foundation.position.y = 0.25;
+            foundation.castShadow = true;
+            scene.add(foundation);
+
+            // Main house
+            const houseGeometry = new THREE.BoxGeometry(6, 5, 6);
+            const houseMaterial = new THREE.MeshPhongMaterial({ color: 0xd4714a });
+            house = new THREE.Mesh(houseGeometry, houseMaterial);
+            house.position.y = 3;
+            house.castShadow = true;
+            scene.add(house);
+
+            // Roof
+            const roofGeometry = new THREE.ConeGeometry(5, 3, 4);
+            const roofMaterial = new THREE.MeshPhongMaterial({ color: 0x8b4513 });
+            const roof = new THREE.Mesh(roofGeometry, roofMaterial);
+            roof.position.y = 7;
+            roof.castShadow = true;
+            scene.add(roof);
+
+            // Door
+            const doorGeometry = new THREE.BoxGeometry(1.5, 2.5, 0.2);
+            const doorMaterial = new THREE.MeshPhongMaterial({ color: 0x2d1b1b });
+            const door = new THREE.Mesh(doorGeometry, doorMaterial);
+            door.position.set(0, 1.5, 3.1);
+            scene.add(door);
+
+            // Windows
+            const windowGeometry = new THREE.BoxGeometry(1, 1, 0.1);
+            const windowMaterial = new THREE.MeshPhongMaterial({ color: 0x87ceeb });
+            const window1 = new THREE.Mesh(windowGeometry, windowMaterial);
+            window1.position.set(-1.5, 3.5, 3.1);
+            scene.add(window1);
+
+            const window2 = new THREE.Mesh(windowGeometry, windowMaterial);
+            window2.position.set(1.5, 3.5, 3.1);
+            scene.add(window2);
+
+            // Trees
+            const trunkGeometry = new THREE.CylinderGeometry(0.5, 0.7, 4, 8);
+            const trunkMaterial = new THREE.MeshPhongMaterial({ color: 0x8b6f47 });
+            const trunk1 = new THREE.Mesh(trunkGeometry, trunkMaterial);
+            trunk1.position.set(-5, 2, -3);
+            scene.add(trunk1);
+
+            const foliageGeometry = new THREE.SphereGeometry(3, 8, 8);
+            const foliageMaterial = new THREE.MeshPhongMaterial({ color: 0x228b22 });
+            const foliage1 = new THREE.Mesh(foliageGeometry, foliageMaterial);
+            foliage1.position.set(-5, 6, -3);
+            scene.add(foliage1);
+
+            const trunk2 = trunk1.clone();
+            trunk2.position.set(5, 2, -3);
+            scene.add(trunk2);
+
+            const foliage2 = foliage1.clone();
+            foliage2.position.set(5, 6, -3);
+            scene.add(foliage2);
+
+            // Scroll handling
+            let scrollY = 0;
+            let targetCameraY = 8;
+            let targetCameraZ = 15;
+
+            window.addEventListener('wheel', (e) => {
+                scrollY += e.deltaY * 0.005;
+                targetCameraZ = Math.max(5, 15 - scrollY);
+                targetCameraY = Math.max(3, 8 - scrollY * 0.3);
+            });
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+
+                camera.position.y += (targetCameraY - camera.position.y) * 0.1;
+                camera.position.z += (targetCameraZ - camera.position.z) * 0.1;
+                camera.lookAt(0, 2, 0);
+
+                if (house) house.rotation.y += 0.0002;
+
+                renderer.render(scene, camera);
+            }
+
+            animate();
         }
 
-        animate();
+        init();
     </script>
 </body>
 </html>
